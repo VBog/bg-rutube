@@ -32,6 +32,8 @@ The plugin is the easiest way to embed RuTube videos in WordPress.
 *	`description` - описание плейлиста (только для списка **uuid**);
 *	`sort="on"`- сортировать плейлист по алфавиту (по умолчанию `sort=""` - не сортировать).
 
+Для встраивания одного видео достаточно указать URL (https://rutube.ru/video/{**uuid**}/) на отдельной строке.
+
 ## Installation
 
 1. Upload 'bg-rutube' directory to the '/wp-content/plugins/' directory.
@@ -51,6 +53,12 @@ The plugin is the easiest way to embed RuTube videos in WordPress.
 
 
 ## Changelog
+
+### 1.2
+
+* Added the ability to localize the plugin.
+* You could just the URL on its own line to embed one video.
+* Fixed some bugs and mistakes.
 
 ### 1.1
 
