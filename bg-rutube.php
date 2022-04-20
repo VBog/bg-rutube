@@ -1,12 +1,14 @@
 <?php
 /* 
     Plugin Name: Bg RuTube Embed
-    Plugin URI: http://bogaiskov.ru
+    Plugin URI: http://bogaiskov.ru/plugin-bg-rutube-embed/
     Description: The plugin is the easiest way to embed RuTube videos in WordPress.
-    Version: 1.1
+    Version: 1.2
     Author: VBog
-    Author URI: https://bogaiskov.ru 
+    Author URI: http://bogaiskov.ru 
 	License:     GPL2
+	Text Domain: bg_rutube
+	Domain Path: /languages
 */
 
 /*  Copyright 2022  Vadim Bogaiskov  (email: vadim.bogaiskov@yandex.ru)
@@ -36,26 +38,46 @@
 if ( !defined('ABSPATH') ) {
 	die( 'Sorry, you are not allowed to access this page directly.' ); 
 }
-define('BG_RUTUBE_VERSION', '1.1');
+define('BG_RUTUBE_VERSION', '1.2');
 
 // Подключаем CSS и JS 
+add_action( 'wp_enqueue_scripts', 'bg_rutube_scripts' );
 function bg_rutube_scripts() {
 	wp_enqueue_style( 'bg_rutube_styles', plugins_url( '/css/bg_rutube.css', plugin_basename(__FILE__) ), array() , BG_RUTUBE_VERSION );
 	wp_enqueue_script( 'bg_rutube_proc', plugins_url( '/js/bg_rutube.js', __FILE__ ), ['jquery'], BG_RUTUBE_VERSION, true );
 }
-add_action( 'wp_enqueue_scripts', 'bg_rutube_scripts' );
+
+// Загрузка интернационализации
+add_action( 'plugins_loaded', 'bg_rutube_load_textdomain' );
+function bg_rutube_load_textdomain() {
+	load_plugin_textdomain( 'bg_rutube', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' ); 
+}
+
+// Регистрируем Embed обработчик
+add_action( 'init', function () {
+	wp_embed_register_handler(
+		'bg_rutube',
+		'~https://rutube\.ru/video/([a-f0-9]+)/?~i',
+		'callback_rutube_oembed_provider'
+	);
+});
+function callback_rutube_oembed_provider( $matches ) {
+	$embed = sprintf( '<div class="centerVideo"><div class="video_container"><iframe class="rutube-video" src="https://rutube.ru/video/embed/%s" allowfullscreen frameborder="0"></iframe></div></div>', esc_attr($matches[1]) );
+	return $embed;
+}
 
 include_once( 'inc/options.php' );
 
 /*****************************************************************************************
 
-	Регистрируем шорт-код [rutube id="{uuid}" sort=""]
+	Регистрируем шорт-код [rutube id="{uuid}" title="" description="" sort=""]
 		id - ID плейлиста или фильма, или список ID фильмов через запятую
+		title - название плейлиста
+		description - описание плейлиста
 		sort='on' - сортировать плейлист по алфавиту
 		
 ******************************************************************************************/
 add_shortcode( 'rutube', 'rutube_player_sortcode' );
-
 function rutube_player_sortcode( $atts ) {
 	extract( shortcode_atts( array(
 		'id' => '',
@@ -64,24 +86,29 @@ function rutube_player_sortcode( $atts ) {
 		'sort' => ''
 	), $atts ) );
 
+	$id = esc_attr($id);
+	$title = esc_html($title);
+	$description = esc_html($description);
+	
 	// Формируем список фильмов с RuTube из шорткода
 	if (empty($id)) return "";											// Фильм не указан
 	elseif (strlen($id) < 32) $playlist = get_rutube_playlist ($id);	// Плейлист RuTube
 	else $playlist = create_rutube_playlist ($id, $title, $description);// Фильм или список фильмов
 	
-	if(!$playlist || empty($playlist)) 
-		return "<div class='tube-error'><p class='warning'>Простите, видеораздел временно не работает.</p></div>";
-
-	// Сортировка плейлиста по алфавиту
-	if ($sort) {
-		usort ($playlist, function($a, $b) {
-			 return strcmp($a["title"], $b["title"]);
-		});
+	if(!$playlist || empty($playlist)) {
+		$quote = "<div class='tube-error'><p class='warning'>Простите, видеораздел временно не работает.</p></div>";
+	} else {
+		// Сортировка плейлиста по алфавиту
+		if ($sort) {
+			usort ($playlist, function($a, $b) {
+				 return strcmp($a["title"], $b["title"]);
+			});
+		}	
+		$quote = rutube_playlist_show ( $playlist );    
 	}
-	
-	return rutube_playlist_show ( $playlist );
-	    
+	return "{$quote}";
 }
+
 /*****************************************************************************************
 
 	Получить информацию о плейлисте RuTybe 
@@ -116,7 +143,6 @@ function get_rutube_playlist_info ( $playlist_id ) {
 	
 	return $info;
 }
-
 
 /*****************************************************************************************
 
@@ -269,37 +295,37 @@ function rutube_playlist_show ( $playlist) {
 		$uuid = '_'. random_int(1000, 9999);
 	
 ?>
-<div id="<?php echo $uuid; ?>" class="playlistContainer">
+<div id="<?php echo esc_attr($uuid); ?>" class="playlistContainer">
 	<div class="centerVideo">
-		<div id="video_container<?php echo $uuid; ?>" class="video_container">
-			<iframe id="player<?php echo $uuid; ?>" class="rutube-video" src="https://rutube.ru/video/embed/<?php echo $playlist['tracks'][0]['uuid']; ?>" allowfullscreen frameborder="0"></iframe>
+		<div id="video_container<?php echo esc_attr($uuid); ?>" class="video_container">
+			<iframe id="player<?php echo esc_attr($uuid); ?>" class="rutube-video" src="https://rutube.ru/video/embed/<?php echo esc_attr($playlist['tracks'][0]['uuid']); ?>" allowfullscreen frameborder="0"></iframe>
 		</div>
 	</div>
 	
 <?php if ($playlist['count'] > 1) : ?>
 	
-	<table id="nav<?php echo $uuid; ?>" class="nav_movies">
+	<table id="nav<?php echo esc_attr($uuid); ?>" class="nav_movies">
 		<tr>
-			<td id="prev_movie<?php echo $uuid; ?>" align="left">
-				<span class="nav_button">&#9204; Предыдущий<span>
+			<td id="prev_movie<?php echo esc_attr($uuid); ?>" align="left">
+				<span class="nav_button">&#9204; <?php _e( 'Previous', 'bg_rutube'); ?><span>
 			</td>
-			<td id="next_movie<?php echo $uuid; ?>" align="right">
-				<span class="nav_button">Следующий &#9205;</span>
+			<td id="next_movie<?php echo esc_attr($uuid); ?>" align="right">
+				<span class="nav_button"><?php _e( 'Next', 'bg_rutube'); ?> &#9205;</span>
 			</td>
 		</tr>
 	</table>
 
 	<table class="videoPlayListTable">
 	<?php foreach ($playlist['tracks'] as $track): ?>
-		<tr class="showRuTubeVideoLink<?php echo $uuid; ?>" title="Воспроизвести: <?php echo $track['title'];?>">
-			<td style="background-image: url('<?php echo $track['thumbnail'];?>');">
-				<input type="hidden" value="<?php echo $track['uuid'];?>" />
+		<tr class="showRuTubeVideoLink<?php echo esc_attr($uuid); ?>" title="<?php _e( 'Play', 'bg_rutube'); ?>: <?php echo esc_html($track['title']);?>">
+			<td style="background-image: url('<?php echo esc_url($track['thumbnail']); ?>');">
+				<input type="hidden" value="<?php echo esc_attr($track['uuid']); ?>" />
 			</td>
 			<td>
-				<span class='track_title'><?php echo $track['title'];?></span> 
+				<span class='track_title'><?php echo esc_html($track['title']); ?></span> 
 			</td>
 			<td align="right">
-				<span class='track_length'><?php echo bg_videolist_sectotime ($track['length']);?></span> 
+				<span class='track_length'><?php echo esc_html(bg_videolist_sectotime ($track['length'])); ?></span> 
 			</td>
 		</tr>
 	<?php endforeach; ?>
@@ -313,12 +339,12 @@ function rutube_playlist_show ( $playlist) {
 	} else {
 ?>
 	<table class="videoPlayListInfo">
-		<tr class="showRuTubeVideoInfo" title="<?php echo $playlist['description'];?>">
-			<td style="background-image: url('<?php echo $playlist['thumbnail'];?>');"></td>
+		<tr class="showRuTubeVideoInfo" title="<?php echo esc_html($playlist['description']); ?>">
+			<td style="background-image: url('<?php echo esc_url($playlist['thumbnail']) ;?>');"></td>
 			<td>
-				<span class='playlist_title'><?php echo $playlist['title'];?></span>
+				<span class='playlist_title'><?php echo esc_html($playlist['title']); ?></span>
 			<?php if ($playlist['count']) { ?>
-					<span class='playlist_count'> (<?php echo $playlist['count'];?>)</span> 
+					<span class='playlist_count'> (<?php echo esc_html($playlist['count']); ?>)</span> 
 			<?php } ?>
 			</td>
 		</tr>
