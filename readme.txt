@@ -44,6 +44,10 @@ Ask me. I'll answer. :)
 
 == Changelog ==
 
+= 1.2.1 =
+
+* Fixed small bugs.
+
 = 1.2 =
 
 * Added the ability to localize the plugin.

@@ -1,7 +1,7 @@
 /* ============================
 VIDEO
 ============================ */
-div.centerVideo {    	   
+div.bg_rutube_centerVideo {    	   
 	display: block;
 	position:relative;
 	width: 100%;
@@ -10,8 +10,8 @@ div.centerVideo {
 	padding-top: 56.25%; 
 }
 
-div.video_container,
-div.video_container iframe {    	   
+div.bg_rutube_videoContainer,
+div.bg_rutube_videoContainer iframe {    	   
 	position:absolute;
 	margin: 0; 
 	padding: 0;
@@ -23,41 +23,41 @@ div.video_container iframe {
 /* ============================
 VIDEO PLAYLIST TABLE
 ============================ */
-table.videoPlayListInfo,
-table.videoPlayListTable {
+table.bg_rutube_videoPlayListInfo,
+table.bg_rutube_videoPlayListTable {
 	width: 100%;
 	margin: 20px auto; 
 }
-table.videoPlayListInfo tr, 
-table.videoPlayListTable tr {
+table.bg_rutube_videoPlayListInfo tr, 
+table.bg_rutube_videoPlayListTable tr {
 	height: 4.5rem;
 	border: 0;
 	border-bottom: 2px solid white;
 }
-table.videoPlayListTable tr {
+table.bg_rutube_videoPlayListTable tr {
 	cursor: pointer;
 }
-table.videoPlayListTable tr:nth-child(odd) {
+table.bg_rutube_videoPlayListTable tr:nth-child(odd) {
 	/* фон нечетных строк */
 	background-color: #eeeeee; /* #ede4d6; */
 }
-table.videoPlayListTable tr:nth-child(even) {
+table.bg_rutube_videoPlayListTable tr:nth-child(even) {
 	/* фон четных строк */
 	background-color: #fafafa; /* #f8f4eb; */
 }
-table.videoPlayListTable tr:hover {
+table.bg_rutube_videoPlayListTable tr:hover {
 	/* фон выделенной строки */
 	background-color: #cccccc; /* #FAEBCD; */ 
 }
-table.videoPlayListTable td {
+table.bg_rutube_videoPlayListTable td {
 	padding-left: 10px;
 	padding-right: 5px;
 	height: 6rem;
 	min-width: 4.5em;
 }
 
-table.videoPlayListInfo td:first-child,
-table.videoPlayListTable td:first-child {
+table.bg_rutube_videoPlayListInfo td:first-child,
+table.bg_rutube_videoPlayListTable td:first-child {
 	background-size: contain;
     background-repeat: no-repeat;
     background-position-y: center;
@@ -66,12 +66,12 @@ table.videoPlayListTable td:first-child {
 }
 
 @media screen and (max-width: 960px) {
-	table.videoPlayListInfo td:first-child
-	table.videoPlayListTable td:first-child {
+	table.bg_rutube_videoPlayListInfo td:first-child
+	table.bg_rutube_videoPlayListTable td:first-child {
 		width: 6rem;
 	}
-	table.videoPlayListInfo td,
-	table.videoPlayListTable td {
+	table.bg_rutube_videoPlayListInfo td,
+	table.bg_rutube_videoPlayListTable td {
 		padding-left: 5px;
 		padding-right: 2px;
 		height: 4.5rem;
@@ -81,11 +81,11 @@ table.videoPlayListTable td:first-child {
 /* ============================
 MOVIE NAVIGATION
 ============================ */
-table.nav_movies {
+table.bg_rutube_nav_movies {
 	width: 100%;
 }
 
-.nav_button {
+.bg_rutube_navButton {
 	width: 12rem;
 	cursor: pointer;
 	padding: 6px;
@@ -94,10 +94,10 @@ table.nav_movies {
 	-ms-user-select: none;      /* IE 10+ */
 	user-select: none;          /* Likely future */      }
 
-.nav_button:hover {
+.bg_rutube_navButton:hover {
 	color: darkred;
 }
-.nav_button:active {
+.bg_rutube_navButton:active {
 	color: red;
 }
 

@@ -54,6 +54,10 @@ The plugin is the easiest way to embed RuTube videos in WordPress.
 
 ## Changelog
 
+### 1.2.1
+
+* Fixed small bugs.
+
 ### 1.2
 
 * Added the ability to localize the plugin.

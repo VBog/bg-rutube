@@ -1,49 +1,53 @@
 jQuery(document).ready(function(){
 	
 	// Если на странице нет Видео, не выводить
-	if (!jQuery('.playlistContainer')[0]) {
+	if (!jQuery('.bg_rutube_playlistContainer')[0]) {
 		return false;
 	}
 	var rutube_url = 'https://rutube.ru/video/embed/';
 
-	jQuery('.playlistContainer').each(function() {
-		var uuid = jQuery(this).attr('id');
+	jQuery('.bg_rutube_playlistContainer').each(function() {
+		var uuid = jQuery(this).attr('data-uuid');
+		var movieID = jQuery(this).attr('data-movie');
+	// Вставляем первое видео во фрейм	
+		jQuery('<iframe id="bg_rutube_player'+uuid+'" class="bg_rutube-video" allowfullscreen frameborder="0"></iframe>').appendTo('div#bg_rutube_videoContainer'+uuid);
+		jQuery('iframe#bg_rutube_player'+uuid).attr('src',rutube_url+movieID);
+		
 		
 	// Если в списке больше одного видео, показываем список
-		if (jQuery('.showRuTubeVideoLink'+uuid).length > 1) {
-			
+		if (jQuery('.bg_rutube_showRuTubeVideoLink'+uuid).length > 1) {
 		// Следующий фильм
-			jQuery('#next_movie'+uuid).click(function(){
-				var movie_id = jQuery('iframe#player'+uuid).attr('src').replace(rutube_url,'');
-				var el = find_movie(movie_id, uuid);
+			jQuery('#bg_rutube_next_movie'+uuid).click(function(){
+				var movieID = jQuery('iframe#bg_rutube_player'+uuid).attr('src').replace(rutube_url,'');
+				var el = bg_rutube_findMovie(movieID, uuid);
 				if (el === false) return false;
-				el = el.next('.showRuTubeVideoLink'+uuid);
-				if (!el.length) el = jQuery('.showRuTubeVideoLink'+uuid).first();
-				show_movie(el, uuid);
+				el = el.next('.bg_rutube_showRuTubeVideoLink'+uuid);
+				if (!el.length) el = jQuery('.bg_rutube_showRuTubeVideoLink'+uuid).first();
+				bg_rutube_showMovie(el, uuid);
 				return false;
 			});
 		// Предыдущий фильм
-			jQuery('#prev_movie'+uuid).click(function(){
-				var movie_id = jQuery('iframe#player'+uuid).attr('src').replace(rutube_url,'');
-				var el = find_movie(movie_id, uuid);
+			jQuery('#bg_rutube_prev_movie'+uuid).click(function(){
+				var movieID = jQuery('iframe#bg_rutube_player'+uuid).attr('src').replace(rutube_url,'');
+				var el = bg_rutube_findMovie(movieID, uuid);
 				if (el === false) return false;
-				el = el.prev('.showRuTubeVideoLink'+uuid);
-				if (!el.length) el = jQuery('.showRuTubeVideoLink'+uuid).last();
-				show_movie(el, uuid);
+				el = el.prev('.bg_rutube_showRuTubeVideoLink'+uuid);
+				if (!el.length) el = jQuery('.bg_rutube_showRuTubeVideoLink'+uuid).last();
+				bg_rutube_showMovie(el, uuid);
 				return false;
 			});
 		// Выбор видео из плейлиста
-			jQuery('.showRuTubeVideoLink'+uuid).click(function(){
-				show_movie(jQuery(this), uuid);
+			jQuery('.bg_rutube_showRuTubeVideoLink'+uuid).click(function(){
+				bg_rutube_showMovie(jQuery(this), uuid);
 				return false;
 			});
 		}
 
 	// Найти элемент по индексу фильма
-		function find_movie(id, uuid) {
+		function bg_rutube_findMovie(id, uuid) {
 			var el = false;
-			jQuery('.showRuTubeVideoLink'+uuid).each(function() {
-				this_id = jQuery(this).find('input[type="hidden"]').val();
+			jQuery('.bg_rutube_showRuTubeVideoLink'+uuid).each(function() {
+				this_id = jQuery(this).first().attr('data-movie');
 				if (this_id == id) {
 					el = jQuery(this);
 					return false;
@@ -52,12 +56,12 @@ jQuery(document).ready(function(){
 			return el;
 		}
 	// Показать фильм из списка
-		function show_movie(el, uuid){
-			movie_id = el.find('input[type="hidden"]').val();
-			jQuery('iframe#player'+uuid).attr('src',rutube_url+movie_id);
+		function bg_rutube_showMovie(el, uuid){
+			movieID = el.first().attr('data-movie');
+			jQuery('iframe#bg_rutube_player'+uuid).attr('src',rutube_url+movieID);
 			// Перемещаемся вверх к фрейму. Фрейм по центру экрана
-			var margin = (jQuery(window).height() - jQuery('iframe#player'+uuid).height())/2;
-			var scrollTop = jQuery('#'+uuid).offset().top - margin;
+			var margin = (jQuery(window).height() - jQuery('iframe#bg_rutube_player'+uuid).height())/2;
+			var scrollTop = jQuery('#bg_rutube_playlistContainer'+uuid).offset().top - margin;
 			if (scrollTop < 0) scrollTop = 0;
 			jQuery( 'html, body' ).animate( {scrollTop : scrollTop}, 800 );
 		}

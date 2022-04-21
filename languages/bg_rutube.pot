@@ -3,17 +3,48 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Bg RuTube Embed\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-04-20 16:52+0300\n"
+"POT-Creation-Date: 2022-04-21 16:44+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: \n"
+"Language-Team: VBog\n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 3.0\n"
+"X-Generator: Poedit 2.4.2\n"
 "X-Loco-Version: 2.6.1; wp-5.9.3\n"
 "X-Domain: bg_rutube\n"
+"X-Poedit-Basepath: ..\n"
+"X-Poedit-KeywordsList: __;_e;esc_html_e\n"
+"X-Poedit-SearchPath-0: .\n"
+
+#: bg-rutube.php:99
+msgid "Sorry, the video is temporarily unavailable."
+msgstr ""
+
+#: bg-rutube.php:308
+msgid "Previous"
+msgstr ""
+
+#: bg-rutube.php:311
+msgid "Next"
+msgstr ""
+
+#: bg-rutube.php:318
+msgid "Play"
+msgstr ""
+
+#: inc/options.php:7
+msgid "Bg RuTube Embed Settings"
+msgstr ""
+
+#: inc/options.php:39
+msgid "Videos on post pages only"
+msgstr ""
+
+#: inc/options.php:40
+msgid "Caching response of the RuTube API"
+msgstr ""
 
 #: inc/options.php:48
 msgid "(post, page, custom post type, attachment)"
@@ -21,48 +52,4 @@ msgstr ""
 
 #: inc/options.php:57
 msgid "(speeds up page opening, cache lifetime is 1 hour)"
-msgstr ""
-
-#. Name of the plugin
-msgid "Bg RuTube Embed"
-msgstr ""
-
-#: inc/options.php:7
-msgid "Bg RuTube Embed Settings"
-msgstr ""
-
-#: inc/options.php:40
-msgid "Caching response of the RuTube API"
-msgstr ""
-
-#. Author URI of the plugin
-msgid "http://bogaiskov.ru"
-msgstr ""
-
-#. URI of the plugin
-msgid "http://bogaiskov.ru/plugin-bg-rutube-embed/"
-msgstr ""
-
-#: bg-rutube.php:307
-msgid "Next"
-msgstr ""
-
-#: bg-rutube.php:314
-msgid "Play"
-msgstr ""
-
-#: bg-rutube.php:304
-msgid "Previous"
-msgstr ""
-
-#. Description of the plugin
-msgid "The plugin is the easiest way to embed RuTube videos in WordPress."
-msgstr ""
-
-#. Author of the plugin
-msgid "VBog"
-msgstr ""
-
-#: inc/options.php:39
-msgid "Videos on post pages only"
 msgstr ""
